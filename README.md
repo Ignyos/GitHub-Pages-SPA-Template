@@ -10,9 +10,26 @@ What problems this template solves:
 
 1. **Deployment overhead**: GitHub Pages deployment runs automatically from `main`.
 2. **Release reproducibility**: tag-based release creation and release-note flow are built in.
-3. **Asset cache control**: release flow updates asset version query strings in `index.html`.
+3. **Asset cache control**: release flow updates asset version query strings in `index.html`, helping browsers and PWAs detect fresh assets after deployment.
 4. **Documentation consistency**: purpose-definition prompt and release-note style guide standardize project communication.
 5. **Static-first architecture discipline**: encourages local-first browser patterns and explicit frontend/backend boundaries.
+6. **WORA-oriented delivery with PWA support**: core app behavior can be shared across platforms through browser standards, with platform-specific extensions added only when required.
+
+## Portability and extension model
+
+This template is designed for web-first portability: build once against browser standards, then run across desktop and mobile environments through a PWA-capable SPA.
+
+Portability baseline:
+
+- Keep core UI, state, and business logic in web code shared across platforms.
+- Use browser-native capabilities (for example IndexedDB, service workers, and manifests) for installable, local-first behavior.
+- Prefer static hosting plus external APIs to keep deployment architecture consistent.
+
+Extension model for OS-level capabilities:
+
+- Keep native-only concerns behind optional per-OS helper services.
+- Expose a stable HTTP/WebSocket-style contract so the frontend integration surface remains consistent.
+- Treat helper services as adapters, allowing the primary application codebase to remain shared.
 
 ## What is included
 
@@ -21,6 +38,7 @@ What problems this template solves:
 - `.github/workflows/create-release.yml`: Creates a GitHub Release when a tag is pushed, using `RELEASE_NOTES.md` as the release body.
 - `RELEASE_NOTES.md`: Release notes file updated during the release workflow.
 - `RELEASE_NOTES_STYLE.md`: Style guide used to keep release notes consistent.
+- `VANILLA_JS_APPROACH.md`: Practical implementation guide for framework-free SPAs using HTML templates, `ui.js` helpers, and feature modules.
 - `.github/prompts/purpose-definition.prompt.md`: Prompt template for defining app purpose and drafting requirements-ready text.
 - `.vscode/launch.json`: VS Code launch configuration for running `release.ps1`.
 
@@ -29,6 +47,19 @@ What problems this template solves:
 1. Clone this repository.
 2. Add your SPA files (for example `index.html`, CSS, and JavaScript assets).
 3. Publish from the repository using GitHub Pages.
+
+## Vanilla JavaScript approach
+
+This repository includes a documented vanilla JavaScript pattern for framework-free, static-hosted SPAs.
+
+Core principles:
+
+- Define UI structure with native HTML `<template>` elements.
+- Route DOM creation and mounting through `ui.js` helpers.
+- Keep feature scripts focused on orchestration, service logic, and state.
+- Use browser-native persistence, including IndexedDB, for local-first behavior.
+
+See `VANILLA_JS_APPROACH.md` for project structure, naming conventions, script loading order, and data-flow guidance.
 
 ## Release workflow
 
@@ -56,6 +87,7 @@ This template is stack-flexible. The following options map cleanly to GitHub Pag
 1. **Pure HTML + CSS + JavaScript**
 	- Best for: lightweight apps, prototypes, and internal tools.
 	- Why it fits: no build pipeline required and direct static deployment.
+	- Implementation guide: `VANILLA_JS_APPROACH.md`.
 	- Example: Sudoku (https://sudoku.ignyos.com/, repo: https://github.com/Ignyos/Sudoku).
 
 2. **TypeScript + Vite (static output)**
